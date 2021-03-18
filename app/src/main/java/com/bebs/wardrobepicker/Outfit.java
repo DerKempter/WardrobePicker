@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @TypeConverters(Converters.class)
-@Entity(tableName = "outfits")
+@Entity(tableName = "Outfits")
 public class Outfit implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)

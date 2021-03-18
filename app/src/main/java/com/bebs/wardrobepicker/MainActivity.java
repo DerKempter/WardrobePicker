@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void onBtnHistClick(View view){
         Toast.makeText(MainActivity.this, "Clicked on Outfit History Button", Toast.LENGTH_LONG).show();
-        Clothing test = new Clothing(1, "I luv mine beb!!", "01");
+        Clothing test = new Clothing(1, "I luv mine beb!!", 01);
         List<Clothing> clothes = new ArrayList<>();
         //Toast.makeText(MainActivity.this, "Test", Toast.LENGTH_SHORT).show();
     }

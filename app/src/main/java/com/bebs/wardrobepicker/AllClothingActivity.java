@@ -103,4 +103,11 @@ public class AllClothingActivity extends AppCompatActivity implements ClothingRe
         intent.putExtra("Clothing", selectedClothing);
         startActivityForResult(intent, ADD_EDIT_CLOTHING_ACTIVITY_REQUEST_CODE_UPDATE);
     }
+
+    private void moveSeasonsToSeasonTable(){
+
+        for (Clothing cloth : clothing) {
+
+        }
+    }
 }

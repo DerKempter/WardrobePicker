@@ -138,7 +138,7 @@ public class ClothingAddEditActivity extends AppCompatActivity {
             sb.append(i);
         }
         String Season = sb.toString();
-        Clothing clothing = new Clothing(selectedType, title, Season);
+        Clothing clothing = new Clothing(selectedType, title, 1);
         if (editable != null){
             clothing.setUid(editable.getUid());
         }
@@ -159,7 +159,7 @@ public class ClothingAddEditActivity extends AppCompatActivity {
     }
 
     private void initSpinner(){
-        Clothing clothing = new Clothing(0, "", null);
+        Clothing clothing = new Clothing(0, "", 1);
         ArrayList<String> ClothingTypes = clothing.getTypeList();
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ClothingTypes);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

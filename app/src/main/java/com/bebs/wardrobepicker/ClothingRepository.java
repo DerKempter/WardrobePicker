@@ -99,4 +99,9 @@ public class ClothingRepository {
         return future.get();
     }
 
+    void insertSeason(Season season){
+        DatabaseClothing.databaseWriteExecutor.execute(() -> {
+            mClothDao.insertSeason(season);
+        });
+    }
 }

@@ -9,6 +9,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Insert;
 import androidx.room.PrimaryKey;
 import androidx.room.Query;
@@ -21,10 +22,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Entity(tableName = "clothes")
+@Entity(tableName = "Clothes")
 public class Clothing implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "uid")
     private int uid;
 
     @ColumnInfo(name = "type_of_clothing")
@@ -36,23 +38,23 @@ public class Clothing implements Parcelable {
     @ColumnInfo(name = "description")
     private String Description;
 
-    @ColumnInfo(name = "season")
-    private String Season;
+    @ColumnInfo(name = "seasonId")
+    private int Season;
 
     @ColumnInfo(name = "in_laundry")
-    private Boolean dirty;
+    private Boolean dirty = false;
 
     @TypeConverters(Converters.class)
     private ArrayList<String> TypeList;
 
-    public Clothing(int type, String name, String Season){
+    public Clothing(int type, String name, int Season){
         this.Type = type;
         this.Name = name;
         this.Season = Season;
         this.populateTypeList();
     }
 
-    public Clothing(int uid, int Type, String Name, String Description, String Season, Boolean dirty, ArrayList<String> TypeList){
+    public Clothing(int uid, int Type, String Name, String Description, int Season, Boolean dirty, ArrayList<String> TypeList){
         this.uid = uid;
         this.Type = Type;
         this.Name = Name;
@@ -75,7 +77,7 @@ public class Clothing implements Parcelable {
         {
             intList.add(i);
         }
-        Season = in.readString();
+        Season = in.readInt();
         byte tmpDirty = in.readByte();
         dirty = tmpDirty == 0 ? null : tmpDirty == 1;
         TypeList = in.createStringArrayList();
@@ -87,7 +89,7 @@ public class Clothing implements Parcelable {
         dest.writeInt(Type);
         dest.writeString(Name);
         dest.writeString(Description);
-        dest.writeString(Season);
+        dest.writeInt(Season);
         dest.writeByte((byte) (dirty == null ? 0 : dirty ? 1 : 2));
         dest.writeStringList(TypeList);
     }
@@ -142,17 +144,17 @@ public class Clothing implements Parcelable {
         for (Integer i : Season) {
             sb.append(i);
         }
-        this.Season = sb.toString();
+        this.Season = 1;
     }
 
-    public String getSeason() {return this.Season;}
+    public int getSeason() {return this.Season;}
 
     public ArrayList<Integer> getSeasonList() {
         ArrayList<Integer> res = new ArrayList<>();
-        String[] stringSplit = this.Season.split("");
-        for (String part : stringSplit) {
-            res.add(Integer.parseInt(part));
-        }
+        //String[] stringSplit = this.Season.split("");
+        //for (String part : stringSplit) {
+        //    res.add(Integer.parseInt(part));
+        //}
         return res;
     }
 
