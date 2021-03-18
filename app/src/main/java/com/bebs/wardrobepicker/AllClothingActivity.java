@@ -38,10 +38,7 @@ public class AllClothingActivity extends AppCompatActivity implements ClothingRe
         setContentView(R.layout.activity_all_clothing);
 
         btnBack = findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(view -> {
-            Intent intent = new Intent(AllClothingActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
+        btnBack.setOnClickListener(view -> finish());
         fab = findViewById(R.id.fabAdd);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(AllClothingActivity.this, ClothingAddEditActivity.class);
@@ -52,17 +49,9 @@ public class AllClothingActivity extends AppCompatActivity implements ClothingRe
         btnFilter.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Chose Filters to apply:");
-            builder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    applyFilter();
-                }
-            })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+            builder.setPositiveButton("Apply", (dialog, which) -> applyFilter())
+                    .setNegativeButton("Cancel", (dialog, which) -> {
 
-                        }
                     });
             builder.create().show();
         });

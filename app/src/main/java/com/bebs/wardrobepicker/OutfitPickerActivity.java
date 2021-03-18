@@ -217,10 +217,7 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
         btnReturnToCreator = findViewById(R.id.btnReturnToCreator);
         btnSaveOutfit = findViewById(R.id.btnSaveOutfit);
         btnBack = findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(view -> {
-            Intent intent = new Intent(OutfitPickerActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
+        btnBack.setOnClickListener(view -> finish());
 
         initCheckBoxes();
         initSpinner();
@@ -434,9 +431,7 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
             }
         }
 
-        for (int type : typesOfClothes) {
-            resTypes.add(type);
-        }
+        resTypes.addAll(typesOfClothes);
 
         return resTypes;
     }

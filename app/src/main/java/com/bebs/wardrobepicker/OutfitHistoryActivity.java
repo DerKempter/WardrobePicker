@@ -36,22 +36,13 @@ public class OutfitHistoryActivity extends AppCompatActivity implements OutfitRe
         btnBack = findViewById(R.id.btnOutfitHistoryBack);
         btnFilter = findViewById(R.id.btnOutfitHistoryFilter);
 
-        btnBack.setOnClickListener(view -> {
-            Intent intent = new Intent(OutfitHistoryActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
+        btnBack.setOnClickListener(view -> finish());
 
         btnFilter.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Choose Filters to apply:");
-            builder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) { applyFilter(); }
-            })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {}
-                    });
+            builder.setPositiveButton("Apply", (dialog, which) -> applyFilter())
+                    .setNegativeButton("Cancel", (dialog, which) -> {});
             builder.create().show();
         });
 
