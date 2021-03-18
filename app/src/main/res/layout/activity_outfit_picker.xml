@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OutfitPickerActivity"
+    android:padding="20dp"
+    android:id="@+id/ConstraintLayoutActivity">
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ConstraintLayoutTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnBack">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/CheckBoxPullover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pullover"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/CheckBoxJacket" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/CheckBoxJacket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jacket"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/CheckBoxShirt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Shirt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/CheckBoxHoodie" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/CheckBoxHoodie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hoodie"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/CheckBoxPullover" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/CheckBoxCropTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crop-Top"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/CheckBoxShirt" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ConstraintLayoutBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/ConstraintLayoutTop"
+        app:layout_constraintTop_toBottomOf="@id/btnBack">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/CheckBoxSkirt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Skirt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/CheckBoxPants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pants"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/CheckBoxSkirt" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/CheckBoxShorts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Shorts"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/CheckBoxPants" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ConstraintLayoutRest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/ConstraintLayoutBottom"
+        app:layout_constraintTop_toBottomOf="@id/btnBack">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/CheckBoxDress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/CheckBoxJumpsuit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jumpsuit"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/CheckBoxDress" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/CheckBoxShoes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Shoes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/CheckBoxJumpsuit" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/CheckBoxBelt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Belt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/CheckBoxShoes" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txtInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Test test test \n test test test\n feirbgku"
+            app:layout_constraintStart_toEndOf="@+id/CheckBoxJumpsuit"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/btnShowResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:onClick="onBtnShowResultClick"
+        android:text="Generate Outfit"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
+        app:layout_constraintTop_toTopOf="@+id/ConstraintLayoutActivity" />
+
+    <Spinner
+        android:id="@+id/SpinnerJewelery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/ConstraintLayoutTop"
+        app:layout_constraintTop_toBottomOf="@+id/ConstraintLayoutRest" />
+
+
+        <EditText
+            android:id="@+id/editTextOutfitName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="Outfit Name"
+            app:layout_constraintTop_toBottomOf="@id/btnReturnToCreator"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ResultRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="96dp"
+            android:layout_marginBottom="48dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTextOutfitName" />
+
+    <Button
+        android:id="@+id/btnSaveOutfit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onBtnSaveOutfit"
+        android:text="Save Outfit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ResultRecyclerView"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btnReturnToCreator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Return to Outfit Creator"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="onBtnReturnToCreatorClick"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayoutSeasons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ConstraintLayoutTop">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkBoxSpring"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Spring"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkBoxSummer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Summer"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxSpring"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkBoxAutumn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Autumn"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxSummer"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkBoxWinter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Winter"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxAutumn"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkBoxSpook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Spooky Season"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/checkBoxSpring" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
