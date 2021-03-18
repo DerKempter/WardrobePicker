@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.common.collect.Sets;
 
+import java.sql.Array;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -383,6 +384,7 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
     public ArrayList<Integer> filterClothingCats(List<Integer> typesOfClothes){
         ArrayList<Integer> resTypes = new ArrayList<>();
 
+        List<Integer> clothCatRest = Arrays.asList(6,7,8,9);
         List<Integer> clothCatBottoms = Arrays.asList(1,3,4);
         List<Integer> clothCatTop = Arrays.asList(0,10,11,12);
         List<Integer> clothCatMiddle = Arrays.asList(2,5);
@@ -399,20 +401,15 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
         possibleLists.add(possibleMiddles);
         possibleLists.add(possibleBottoms);
 
-        List<Integer> toBeRemoved = new ArrayList<>();
 
         for (List<Integer> posList : possibilityLists) {
             for (Integer type : posList) {
                 if (typesOfClothes.contains(type)) {
-                    toBeRemoved.add(type);
                     possibleLists.get(possibilityLists.indexOf(posList)).add(type);
                 }
             }
         }
 
-        for (Integer type : toBeRemoved) {
-            typesOfClothes.remove(type);
-        }
 
         if ((possibleLists.get(0).size() > 0 || possibleLists.get(2).size() > 0) && possibleLists.get(1).size() > 0) {
             int coinFlip = ThreadLocalRandom.current().nextInt(0,2);
@@ -425,13 +422,13 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
         }
 
         for (List<Integer> typeList : possibleLists) {
-            if (typeList.size() > 1) {
+            if (typeList.size() >= 1) {
                 int randomNum = ThreadLocalRandom.current().nextInt(0, typeList.size());
                 resTypes.add(typeList.get(randomNum));
             }
         }
 
-        resTypes.addAll(typesOfClothes);
+        resTypes.addAll(clothCatRest);
 
         return resTypes;
     }
