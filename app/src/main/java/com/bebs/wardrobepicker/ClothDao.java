@@ -47,4 +47,10 @@ public interface ClothDao{
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertSeason(Season season);
+
+    @Query("SELECT id FROM season WHERE spring = :spring AND summer = :summer AND autumn = :autumn AND winter = :winter AND spook = :spook")
+    List<Integer> getSeasonIdWithGivenSeasons(Integer spring, Integer summer, Integer autumn, Integer winter, Integer spook);
+
+    @Query("SELECT * FROM season WHERE id = :id")
+    List<Season> getSeasonById(int id);
 }

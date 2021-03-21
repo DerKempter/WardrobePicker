@@ -1,6 +1,7 @@
 package com.bebs.wardrobepicker;
 
 import android.app.Application;
+import android.telecom.Call;
 
 import androidx.lifecycle.LiveData;
 
@@ -103,5 +104,27 @@ public class ClothingRepository {
         DatabaseClothing.databaseWriteExecutor.execute(() -> {
             mClothDao.insertSeason(season);
         });
+    }
+
+    List<Integer> getSeasonIdWithGivenSeasons(int spring, int summer, int autumn, int winter, int spook) throws ExecutionException, InterruptedException {
+        Callable<List<Integer>> callable = new Callable<List<Integer>>() {
+            @Override
+            public List<Integer> call() throws Exception {
+                return mClothDao.getSeasonIdWithGivenSeasons(spring, summer, autumn, winter, spook);
+            }
+        };
+        Future<List<Integer>> future = DatabaseClothing.databaseWriteExecutor.submit(callable);
+        return future.get();
+    }
+
+    List<Season> getSeasonById(int id) throws ExecutionException, InterruptedException {
+        Callable<List<Season>> callable = new Callable<List<Season>>() {
+            @Override
+            public List<Season> call() throws Exception {
+                return mClothDao.getSeasonById(id);
+            }
+        };
+        Future<List<Season>> future = DatabaseClothing.databaseWriteExecutor.submit(callable);
+        return future.get();
     }
 }

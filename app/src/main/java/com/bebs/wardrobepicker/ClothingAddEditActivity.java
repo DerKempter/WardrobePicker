@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ClothingAddEditActivity extends AppCompatActivity {
 
@@ -51,28 +52,46 @@ public class ClothingAddEditActivity extends AppCompatActivity {
         if (gottenExtras) {
             Clothing toBeEditedClothing = (Clothing) intent.getExtras().get("Clothing");
             this.editable = toBeEditedClothing;
-            initViews(toBeEditedClothing);
+            try {
+                initViews(toBeEditedClothing);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             btnSave.setOnClickListener(view -> {
                 Intent replyIntent = new Intent();
                 if (!ClothingIsValid()) {
                     setResult(RESULT_CANCELED, replyIntent);
                 } else {
-                    Clothing clothing = createClothing(toBeEditedClothing);
+                    Clothing clothing = null;
+                    try {
+                        clothing = createClothing(toBeEditedClothing);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     replyIntent.putExtra("ClothingToBeSaved", clothing);
                     setResult(RESULT_OK, replyIntent);
                 }
                 finish();
             });
         } else {
-            initViews(null);
+            try {
+                initViews(null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             btnSave.setOnClickListener(view -> {
                 Intent replyIntent = new Intent();
                 if (!ClothingIsValid()) {
                     setResult(RESULT_CANCELED, replyIntent);
                 } else {
-                    Clothing clothing = createClothing(null);
+                    Clothing clothing = null;
+                    try {
+                        clothing = createClothing(null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     replyIntent.putExtra("ClothingToBeSaved", clothing);
                     setResult(RESULT_OK, replyIntent);
                 }
@@ -89,14 +108,8 @@ public class ClothingAddEditActivity extends AppCompatActivity {
         btnDelClothing.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Delete this Outfit?");
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) { mClothingViewModel.deleteClothing(editable); finish(); }
-            })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {}
-                    });
+            builder.setPositiveButton("Yes", (dialog, which) -> { mClothingViewModel.deleteClothing(editable); finish(); })
+                    .setNegativeButton("Cancel", (dialog, which) -> {});
             builder.create().show();
         });
     }
@@ -121,30 +134,39 @@ public class ClothingAddEditActivity extends AppCompatActivity {
         return atLeastOneSeasonChecked && nameIsSet && typeIsSelected;
     }
 
-    private Clothing createClothing(Clothing editable) {
+    private Clothing createClothing(Clothing editable) throws ExecutionException, InterruptedException {
         int selectedType = SpinnerClothType.getSelectedItemPosition();
         String title = editName.getText() != null ? editName.getText().toString() : "";
         String description = editDescription.getText() != null ? editDescription.getText().toString() : "";
+
         ArrayList<Integer> season = new ArrayList<>();
         List<CheckBox> seasonsList = getSeasonCheckBoxList();
         for (int i = 0; i < seasonsList.size(); i++) {
-            if (seasonsList.get(i).isChecked()) {
-                season.add(i);
-            }
+            season.add(seasonsList.get(i).isChecked()? 1 : 0);
         }
+        int seasonInt = getSeasonId(season);
+
         Boolean inLaundry = CheckBoxLaundry.isChecked();
-        StringBuilder sb = new StringBuilder();
-        for (Integer i : season) {
-            sb.append(i);
-        }
-        String Season = sb.toString();
-        Clothing clothing = new Clothing(selectedType, title, 1);
+
+        Clothing clothing = new Clothing(selectedType, title, seasonInt);
         if (editable != null){
             clothing.setUid(editable.getUid());
         }
         clothing.setDescription(description);
         clothing.setDirty(inLaundry);
         return clothing;
+    }
+
+    private int getSeasonId(ArrayList<Integer> seasons) throws ExecutionException, InterruptedException {
+        List<Integer> seasonIdInts = mClothingViewModel.getSeasonIdWithGivenSeasons(seasons.get(0), seasons.get(1), seasons.get(2), seasons.get(3), seasons.get(4));
+        if (seasonIdInts.size() == 0) {
+            Season season = new Season(seasons.get(0), seasons.get(1), seasons.get(2), seasons.get(3), seasons.get(4));
+            mClothingViewModel.insertSeason(season);
+            return mClothingViewModel.getSeasonIdWithGivenSeasons(seasons.get(0), seasons.get(1), seasons.get(2), seasons.get(3), seasons.get(4)).get(0);
+        } else {
+            return seasonIdInts.get(0);
+        }
+
     }
 
     private List<CheckBox> getSeasonCheckBoxList() {
@@ -166,7 +188,7 @@ public class ClothingAddEditActivity extends AppCompatActivity {
         SpinnerClothType.setAdapter(arrayAdapter);
     }
 
-    private void initViews(Clothing editable) {
+    private void initViews(Clothing editable) throws ExecutionException, InterruptedException {
         editName = findViewById(R.id.editName);
         editDescription = findViewById(R.id.editDescription);
 
@@ -195,8 +217,12 @@ public class ClothingAddEditActivity extends AppCompatActivity {
             editName.setText(editable.getName());
             editDescription.setText(editable.getDescription());
             SpinnerClothType.setSelection(editable.getType());
-            for (int season:editable.getSeasonList()) {
-                checkBoxes.get(season).setChecked(true);
+            List<Season> seasonList = mClothingViewModel.getSeasonById(editable.getSeason());
+            if (seasonList.size() > 0) {
+                ArrayList<Integer> seasonInts = seasonList.get(0).getSeasons();
+                for (int i = 0; i < 5; i++) {
+                    checkBoxes.get(i).setChecked(seasonInts.get(i) == 1);
+                }
             }
             if (editable.getDirty()) {
                 CheckBoxLaundry.setChecked(true);

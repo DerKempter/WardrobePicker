@@ -1,10 +1,14 @@
 package com.bebs.wardrobepicker;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Database;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
@@ -12,11 +16,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Clothing.class, Outfit.class, Season.class}, version = 4, exportSchema = true)
+@Database(entities = {Clothing.class, Outfit.class, Season.class}, version = 5, exportSchema = true)
 public abstract class DatabaseClothing extends RoomDatabase {
 
     public abstract ClothDao clothDao();
@@ -32,7 +38,7 @@ public abstract class DatabaseClothing extends RoomDatabase {
             synchronized (DatabaseClothing.class){
                 if (INSTANCE == null){
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            DatabaseClothing.class, "clothing_Database").addCallback(sRoomDatabaseCallback).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build();
+                            DatabaseClothing.class, "clothing_Database").addCallback(sRoomDatabaseCallback).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build();
                 }
             }
         }
@@ -56,7 +62,7 @@ public abstract class DatabaseClothing extends RoomDatabase {
     static final Migration MIGRATION_1_2 = new Migration(1,2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE 'season' ('id' INTEGER NOT NULL, 'spring' INTEGER NOT NULL, 'summer' INTEGER NOT NULL, 'autumn' INTEGER NOT NULL, 'winter' INTEGER NOT NULL, 'spook' INTEGER NOT NULL, PRIMARY KEY('id'))");
+            database.execSQL("CREATE TABLE 'season' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'spring' INTEGER DEFAULT -1, 'summer' INTEGER DEFAULT -1, 'autumn' INTEGER DEFAULT -1, 'winter' INTEGER DEFAULT -1, 'spook' INTEGER DEFAULT -1)");
         }
     };
 
@@ -70,11 +76,11 @@ public abstract class DatabaseClothing extends RoomDatabase {
                     "'clothId' INTEGER NOT NULL, " +
                     "'season' TEXT NOT NULL)");
             database.execSQL("INSERT INTO 'ClothesSeason' ('clothId','season')" +
-                    "SELECT uid,'seasonId' " +
+                    "SELECT uid,seasonId " +
                     "FROM Clothes");
 
             database.execSQL("CREATE TABLE IF NOT EXISTS 'ClothesNewTemp' (" +
-                    "'id'INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "uid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     "type_of_clothing INTEGER NOT NULL, " +
                     "clothing_name TEXT, " +
                     "description TEXT,  " +
@@ -91,8 +97,8 @@ public abstract class DatabaseClothing extends RoomDatabase {
                     "in_laundry INTEGER, " +
                     "TypeList TEXT, " +
                     "FOREIGN KEY('seasonId') REFERENCES 'Season'('id') ON UPDATE NO ACTION ON DELETE CASCADE )");
-            database.execSQL("INSERT INTO 'ClothesNew' ('type_of_clothing','clothing_name','description','in_laundry','TypeList') " +
-                    "SELECT type_of_clothing,clothing_name,description,in_laundry,TypeList" +
+            database.execSQL("INSERT INTO 'ClothesNew'(uid,type_of_clothing,clothing_name,description,in_laundry,TypeList) " +
+                    "SELECT uid,type_of_clothing,clothing_name,description,in_laundry,TypeList " +
                     "FROM Clothes");
             database.execSQL("DROP TABLE Clothes");
             database.execSQL("ALTER TABLE ClothesNewTemp RENAME TO Clothes");
@@ -103,11 +109,80 @@ public abstract class DatabaseClothing extends RoomDatabase {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("INSERT INTO 'Clothes' (type_of_clothing,clothing_name,description,seasonId,in_laundry,TypeList) " +
-                    "SELECT type_of_clothing,clothing_name,description,seasonId,in_laundry,TypeList " +
+                    "SELECT type_of_clothing,clothing_name,description,type_of_clothing,in_laundry,TypeList " +
                     "FROM ClothesNew");
-            database.execSQL("UPDATE Clothes " +
-                    "SET seasonId = (SELECT SeasonId FROM ClothesSeason WHERE Clothes.uid = ClothesSeason.clothId)");
+            Cursor cursor = database.query("SELECT * FROM Clothes");
+            Cursor secondCursor = database.query("SELECT * FROM ClothesSeason");
+            ArrayList<Season> seasonsToBeAdded = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                secondCursor.moveToNext();
+                int Sid = cursor.getInt(0);
+                String seasonString = secondCursor.getString(2);
+                Season season = new Season(seasonString);
+                int tempId = Sid;
+                boolean isInList = false;
+                for (Season tempSeason : seasonsToBeAdded) {
+                    if (tempSeason.equals(season)) {
+                        tempId = seasonsToBeAdded.indexOf(tempSeason);
+                        isInList = true;
+                        break;
+                    }
+                }
+                if (!isInList) {
+                    season.setId(seasonsToBeAdded.size());
+                    tempId = season.getId();
+                    seasonsToBeAdded.add(season);
+                }
+                if (seasonsToBeAdded.size() == 0) {seasonsToBeAdded.add(season);}
+                
+                database.execSQL("UPDATE Clothes SET seasonId = :tempId WHERE uid = :Sid");
+            }
 
+            Cursor othererCursor = database.query("SELECT * FROM Clothes");
+            ArrayList<Integer> springValues= new ArrayList<>();
+            while (othererCursor.moveToNext()) {
+                springValues.add(othererCursor.getInt(4));
+            }
+
+            Integer id, spring, summer, autumn, winter, spook;
+
+            ContentValues cv = new ContentValues();
+            for (Season season : seasonsToBeAdded) {
+                cv.clear();
+                cv.put("'id'", season.getId());
+                cv.put("'spring'", season.getSpring());
+                cv.put("'summer'", season.getSummer());
+                cv.put("'autumn'", season.getAutumn());
+                cv.put("'winter'", season.getWinter());
+                cv.put("'spook'", season.getSpook());
+                database.insert("Season", OnConflictStrategy.ABORT, cv);
+            }
+            Cursor otherCursor = database.query("SELECT * FROM season");
+            ArrayList<Integer> springgValues= new ArrayList<>();
+            while (otherCursor.moveToNext()) {
+                springgValues.add(otherCursor.getInt(1));
+            }
+            int a = 0;
+        }
+    };
+
+    static final Migration MIGRATION_4_5 = new Migration(4,5) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `SeasonNew` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `spring` INTEGER NOT NULL DEFAULT -1, `summer` INTEGER NOT NULL DEFAULT -1, `autumn` INTEGER NOT NULL DEFAULT -1, `winter` INTEGER NOT NULL DEFAULT -1, `spook` INTEGER NOT NULL DEFAULT -1)");
+
+            Cursor cursor = database.query("SELECT * FROM season");
+            ArrayList<Integer> springValues= new ArrayList<>();
+            while (cursor.moveToNext()) {
+                springValues.add(cursor.getInt(1));
+            }
+
+            database.execSQL("INSERT INTO 'SeasonNew'(id,spring,summer,autumn,winter,spook) " +
+                    "SELECT id,spring,summer,autumn,winter,spook " +
+                    "FROM season");
+
+            database.execSQL("DROP TABLE season");
+            database.execSQL("ALTER TABLE SeasonNew RENAME TO Season");
         }
     };
 }

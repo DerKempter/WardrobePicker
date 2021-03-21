@@ -111,7 +111,7 @@ public class Clothing implements Parcelable {
         }
     };
 
-    public int getUid() { return uid; }
+    public int getUid() { return this.uid; }
 
     public void setUid(int uid) { this.uid = uid; }
 

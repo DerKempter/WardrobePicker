@@ -45,7 +45,12 @@ public class ClothingViewModel extends AndroidViewModel {
 
     public List<Clothing> getWithFullFilter(ArrayList<String> season, boolean laundry, ArrayList<Integer> typeOfClothing) throws ExecutionException, InterruptedException {return mClothingRepository.getWithFullFilter(season, laundry, typeOfClothing);}
 
+
     public void insertSeason(Season season) {mClothingRepository.insertSeason(season);}
+
+    public List<Integer> getSeasonIdWithGivenSeasons(int spring, int summer, int autumn, int winter, int spook) throws ExecutionException, InterruptedException { return mClothingRepository.getSeasonIdWithGivenSeasons(spring, summer, autumn, winter,spook);}
+
+    List<Season> getSeasonById(int id) throws ExecutionException, InterruptedException { return mClothingRepository.getSeasonById(id);}
 
 
 
