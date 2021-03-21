@@ -308,6 +308,35 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
 
         typeOfClothing = convertCheckBoxToArrayNumerized();
 
+        ArrayList<Integer> seasons = new ArrayList<>();
+
+        if (seasonInt.contains(0)) {
+            seasons.add(1);
+        } else {
+            seasons.add(0);
+        }
+        if (seasonInt.contains(1)) {
+            seasons.add(1);
+        } else {
+            seasons.add(0);
+        }
+        if (seasonInt.contains(2)) {
+            seasons.add(1);
+        } else {
+            seasons.add(0);
+        }
+        if (seasonInt.contains(3)) {
+            seasons.add(1);
+        } else {
+            seasons.add(0);
+        }
+        if (seasonInt.contains(4)) {
+            seasons.add(1);
+        } else {
+            seasons.add(0);
+        }
+
+        //TODO Request all season object, build a season object with selected seasons and compare. If equal is found, take this seasons Id for the Clothing Request.
 
         Set<String> seasonSet = new HashSet<>(seasonInt);
         seasonList = new ArrayList<>();
