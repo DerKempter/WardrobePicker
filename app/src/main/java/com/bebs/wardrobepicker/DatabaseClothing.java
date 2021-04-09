@@ -69,14 +69,14 @@ public abstract class DatabaseClothing extends RoomDatabase {
     static final Migration MIGRATION_2_3 = new Migration(2,3) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE 'Clothes' RENAME COLUMN 'season' TO 'seasonId'");
+            // database.execSQL("ALTER TABLE 'Clothes' RENAME COLUMN 'season' TO 'seasonId'");
 
             database.execSQL("CREATE TABLE IF NOT EXISTS 'ClothesSeason' (" +
                     "'uid' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
                     "'clothId' INTEGER NOT NULL, " +
                     "'season' TEXT NOT NULL)");
             database.execSQL("INSERT INTO 'ClothesSeason' ('clothId','season')" +
-                    "SELECT uid,seasonId " +
+                    "SELECT uid,season " +
                     "FROM Clothes");
 
             database.execSQL("CREATE TABLE IF NOT EXISTS 'ClothesNewTemp' (" +
