@@ -351,25 +351,10 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
                 this.seasonList.add(s.getId());
             }
         }
-        //TODO Request all season object, build a season object with selected seasons and compare. If equal is found, take this seasons Id for the Clothing Request.
-
-        //Set<String> seasonSet = new HashSet<>(seasonInt);
-        //seasonList = new ArrayList<>();
-        //Set<String> seasonDefaultSet = new HashSet<>(seasonDefaultInt);
-        //Set<Set<String>> setOfSets = Sets.powerSet(seasonDefaultSet);
-
-        //for (Set<String> set : setOfSets) {
-        //    if (set.stream().anyMatch(seasonSet::contains))
-        //    {
-        //        seasonList.add(String.join("", set));
-        //   }
-        //}
     }
 
 
     private void initRCView() throws ExecutionException, InterruptedException {
-
-        //TODO make this actually randomize the result and not just pull all results
 
         resultRecyclerView = findViewById(R.id.ResultRecyclerView);
 
@@ -455,7 +440,6 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
                 }
             }
         }
-
 
         if ((possibleLists.get(0).size() > 0 || possibleLists.get(2).size() > 0) && possibleLists.get(1).size() > 0) {
             int coinFlip = ThreadLocalRandom.current().nextInt(0,2);
