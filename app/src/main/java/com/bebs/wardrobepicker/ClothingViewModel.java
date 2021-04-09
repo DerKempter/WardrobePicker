@@ -37,20 +37,22 @@ public class ClothingViewModel extends AndroidViewModel {
 
     public Clothing getById(int uuid) throws ExecutionException, InterruptedException {return mClothingRepository.getById(uuid);}
 
-    public List<Clothing> getBySeason(ArrayList<String> season) throws ExecutionException, InterruptedException {return mClothingRepository.getBySeason(season);}
+    public List<Clothing> getBySeason(ArrayList<Integer> season) throws ExecutionException, InterruptedException {return mClothingRepository.getBySeason(season);}
 
     public List<Clothing> getLaundry(boolean laundry) throws ExecutionException, InterruptedException {return mClothingRepository.getLaundry(laundry);}
 
     public List<Clothing> getByClothing(ArrayList<Integer> typeOfClothing) throws ExecutionException, InterruptedException {return mClothingRepository.getByClothing(typeOfClothing);}
 
-    public List<Clothing> getWithFullFilter(ArrayList<String> season, boolean laundry, ArrayList<Integer> typeOfClothing) throws ExecutionException, InterruptedException {return mClothingRepository.getWithFullFilter(season, laundry, typeOfClothing);}
+    public List<Clothing> getWithFullFilter(ArrayList<Integer> season, boolean laundry, ArrayList<Integer> typeOfClothing) throws ExecutionException, InterruptedException {return mClothingRepository.getWithFullFilter(season, laundry, typeOfClothing);}
 
 
     public void insertSeason(Season season) {mClothingRepository.insertSeason(season);}
 
     public List<Integer> getSeasonIdWithGivenSeasons(int spring, int summer, int autumn, int winter, int spook) throws ExecutionException, InterruptedException { return mClothingRepository.getSeasonIdWithGivenSeasons(spring, summer, autumn, winter,spook);}
 
-    List<Season> getSeasonById(int id) throws ExecutionException, InterruptedException { return mClothingRepository.getSeasonById(id);}
+    public List<Season> getSeasonById(int id) throws ExecutionException, InterruptedException { return mClothingRepository.getSeasonById(id);}
+
+    public List<Season> getAllSeasons() throws ExecutionException, InterruptedException { return mClothingRepository.getAllSeasons(); }
 
 
 

@@ -56,7 +56,7 @@ public class ClothingRepository {
         return future.get();
     }
 
-    List<Clothing> getBySeason(ArrayList<String> season) throws ExecutionException, InterruptedException {
+    List<Clothing> getBySeason(ArrayList<Integer> season) throws ExecutionException, InterruptedException {
         Callable<List<Clothing>> callable = new Callable<List<Clothing>>() {
             @Override
             public List<Clothing> call() throws Exception {
@@ -89,7 +89,7 @@ public class ClothingRepository {
         return future.get();
     }
 
-    List<Clothing> getWithFullFilter(ArrayList<String> season, boolean laundry, ArrayList<Integer> typeOfClothing) throws ExecutionException, InterruptedException {
+    List<Clothing> getWithFullFilter(ArrayList<Integer> season, boolean laundry, ArrayList<Integer> typeOfClothing) throws ExecutionException, InterruptedException {
         Callable<List<Clothing>> callable = new Callable<List<Clothing>>() {
             @Override
             public List<Clothing> call() throws Exception {
@@ -122,6 +122,17 @@ public class ClothingRepository {
             @Override
             public List<Season> call() throws Exception {
                 return mClothDao.getSeasonById(id);
+            }
+        };
+        Future<List<Season>> future = DatabaseClothing.databaseWriteExecutor.submit(callable);
+        return future.get();
+    }
+
+    List<Season> getAllSeasons() throws ExecutionException, InterruptedException {
+        Callable<List<Season>> callable = new Callable<List<Season>>() {
+            @Override
+            public List<Season> call() throws Exception {
+                return mClothDao.getAllSeasons();
             }
         };
         Future<List<Season>> future = DatabaseClothing.databaseWriteExecutor.submit(callable);

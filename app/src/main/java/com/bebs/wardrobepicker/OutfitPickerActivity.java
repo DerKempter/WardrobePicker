@@ -50,10 +50,10 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
 
     private List<Clothing> clothing;
 
-    private ArrayList<String> seasonInt;
+    private ArrayList<Integer> seasonInt;
     private boolean laundry;
     private ArrayList<Integer> typeOfClothing;
-    private ArrayList<String> seasonList;
+    private ArrayList<Integer> seasonList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +85,14 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
     }
 
     public void onBtnSaveOutfit(View view) {
-        Outfit outfit = createOutfit(this.clothing);
-        mClothingViewModel.insert(outfit);
+        if (editTextOutfitNames.getText().toString().equals("")){
+            Outfit outfit = createOutfit(this.clothing);
+            mClothingViewModel.insert(outfit);
 
-        Toast.makeText(this, "Saved Outfit named "+ outfit.getName() +"!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Saved Outfit named "+ outfit.getName() +"!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Toast.makeText(this, "Please enter a Name for your Outfit!", Toast.LENGTH_SHORT).show();
     }
 
     private Outfit createOutfit(List<Clothing> clothes) {
@@ -287,16 +291,16 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
         seasons[4] = checkBoxSpook;
     }
 
-    private void getSelections() {
+    private void getSelections() throws ExecutionException, InterruptedException {
         seasonInt = new ArrayList<>();
-        ArrayList<String> seasonDefaultInt = new ArrayList<>();
+        ArrayList<Integer> seasonDefaultInt = new ArrayList<>();
 
         for (int i = 0; i <= 4; i++) {
-            seasonDefaultInt.add(Integer.toString(i));
+            seasonDefaultInt.add(i);
         }
         for (int i = 0; i < seasons.length; i++) {
             if (seasons[i].isChecked()){
-                seasonInt.add(Integer.toString(i));
+                seasonInt.add(i);
             }
         }
 
@@ -336,19 +340,30 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
             seasons.add(0);
         }
 
-        //TODO Request all season object, build a season object with selected seasons and compare. If equal is found, take this seasons Id for the Clothing Request.
+        Season season = new Season(seasons.get(0), seasons.get(1), seasons.get(2), seasons.get(3), seasons.get(4));
 
-        Set<String> seasonSet = new HashSet<>(seasonInt);
-        seasonList = new ArrayList<>();
-        Set<String> seasonDefaultSet = new HashSet<>(seasonDefaultInt);
-        Set<Set<String>> setOfSets = Sets.powerSet(seasonDefaultSet);
+        List<Season> allSeasons = mClothingViewModel.getAllSeasons();
 
-        for (Set<String> set : setOfSets) {
-            if (set.stream().anyMatch(seasonSet::contains))
-            {
-                seasonList.add(String.join("", set));
+        this.seasonList = new ArrayList<>();
+
+        for (Season s : allSeasons) {
+            if (season.partEquals(s)) {
+                this.seasonList.add(s.getId());
             }
         }
+        //TODO Request all season object, build a season object with selected seasons and compare. If equal is found, take this seasons Id for the Clothing Request.
+
+        //Set<String> seasonSet = new HashSet<>(seasonInt);
+        //seasonList = new ArrayList<>();
+        //Set<String> seasonDefaultSet = new HashSet<>(seasonDefaultInt);
+        //Set<Set<String>> setOfSets = Sets.powerSet(seasonDefaultSet);
+
+        //for (Set<String> set : setOfSets) {
+        //    if (set.stream().anyMatch(seasonSet::contains))
+        //    {
+        //        seasonList.add(String.join("", set));
+        //   }
+        //}
     }
 
 
@@ -356,13 +371,13 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
 
         //TODO make this actually randomize the result and not just pull all results
 
-        getSelections();
-
         resultRecyclerView = findViewById(R.id.ResultRecyclerView);
 
         ClothingRecViewAdapter adapter = new ClothingRecViewAdapter(this);
 
         mClothingViewModel = new ViewModelProvider(this).get(ClothingViewModel.class);
+
+        getSelections();
 
         List<List<Clothing>> clothingListCollAll = new ArrayList<>();
         List<Clothing> clothingListRandomized = new ArrayList<>();
@@ -401,13 +416,15 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
             }
         }
 
-        this.clothing = clothingListRandomized;
-        adapter.setClothing(this.clothing);
+        if (clothingListRandomized.size() > 0) {
+            this.clothing = clothingListRandomized;
+            adapter.setClothing(this.clothing);
 
-        resultRecyclerView.setAdapter(adapter);
-        resultRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            resultRecyclerView.setAdapter(adapter);
+            resultRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        resultRecyclerView.setVisibility(View.VISIBLE);
+            resultRecyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
     public ArrayList<Integer> filterClothingCats(List<Integer> typesOfClothes){

@@ -33,8 +33,8 @@ public interface ClothDao{
     @Query("SELECT * FROM clothes WHERE uid = :uuid ")
     Clothing getById(int uuid);
 
-    @Query("SELECT * FROM clothes WHERE seasonId IN (:season)")
-    List<Clothing> getBySeason(ArrayList<String> season);
+    @Query("SELECT * FROM clothes WHERE seasonId IN (:seasonIds)")
+    List<Clothing> getBySeason(ArrayList<Integer> seasonIds);
 
     @Query("SELECT * FROM clothes WHERE in_laundry = :laundry")
     List<Clothing> getLaundry(boolean laundry);
@@ -43,7 +43,7 @@ public interface ClothDao{
     List<Clothing> getByClothing(ArrayList<Integer> typeOfClothing);
 
     @Query("SELECT * FROM clothes WHERE seasonId IN (:season) AND in_laundry = :laundry AND type_of_clothing IN (:typeOfClothing)")
-    List<Clothing> getWithFullFilter(ArrayList<String> season, boolean laundry, ArrayList<Integer> typeOfClothing);
+    List<Clothing> getWithFullFilter(ArrayList<Integer> season, boolean laundry, ArrayList<Integer> typeOfClothing);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertSeason(Season season);
@@ -53,4 +53,7 @@ public interface ClothDao{
 
     @Query("SELECT * FROM season WHERE id = :id")
     List<Season> getSeasonById(int id);
+
+    @Query("SELECT * FROM season")
+    List<Season> getAllSeasons();
 }

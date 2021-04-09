@@ -109,6 +109,17 @@ public class Season implements Parcelable {
                 spook == season.spook;
     }
 
+    public boolean partEquals(Season s){
+        if (this == s) return true;
+        if (s == null || getClass() != s.getClass()) return false;
+
+        return spring == 1 && spring == s.getSpring() ||
+                summer == 1 && summer == s.getSummer() ||
+                autumn == 1 && autumn == s.getAutumn() ||
+                winter == 1 && winter == s.getWinter() ||
+                spook == 1 && spook == s.getSpook();
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(spring, summer, autumn, winter, spook);
