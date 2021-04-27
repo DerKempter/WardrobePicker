@@ -85,7 +85,7 @@ public class OutfitPickerActivity extends AppCompatActivity implements ClothingR
     }
 
     public void onBtnSaveOutfit(View view) {
-        if (editTextOutfitNames.getText().toString().equals("")){
+        if (!editTextOutfitNames.getText().toString().equals("")){
             Outfit outfit = createOutfit(this.clothing);
             mClothingViewModel.insert(outfit);
 

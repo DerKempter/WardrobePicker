@@ -147,7 +147,8 @@
             android:layout_marginStart="8dp"
             android:text="Test test test \n test test test\n feirbgku"
             app:layout_constraintStart_toEndOf="@+id/CheckBoxJumpsuit"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="invisible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -205,11 +206,10 @@
         android:id="@+id/btnReturnToCreator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="Return to Outfit Creator"
-        app:layout_constraintStart_toEndOf="@id/btnBack"
-        app:layout_constraintTop_toTopOf="parent"
-        android:onClick="onBtnReturnToCreatorClick"/>
+        android:onClick="onBtnReturnToCreatorClick"
+        android:text="Back to Outfit Creator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

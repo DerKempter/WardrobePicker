@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,7 +27,7 @@ import io.reactivex.Completable;
 import io.reactivex.functions.Action;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements OutfitRecViewAdapter.OnOutfitListener{
     private static final String TAG = "MainActivity";
 
     private ExecutorService executorService;
@@ -35,6 +36,10 @@ public class MainActivity extends AppCompatActivity{
     private RecyclerView clothingRecyclerView;
 
     ClothDao clothDao;
+
+    private List<Outfit> outfits;
+
+    private ClothingViewModel mClothingViewModel;
 
     Handler mainHandler = new Handler();
 
@@ -96,6 +101,30 @@ public class MainActivity extends AppCompatActivity{
         btnCollection = findViewById(R.id.btnCollection);
         btnCreateOutfit = findViewById(R.id.btnCreateOutfit);
         btnOutfitHistory = findViewById(R.id.btnOutfitHistory);
+
+        initRCView();
+    }
+
+    private void initRCView(){
+
+        clothingRecyclerView = findViewById(R.id.clothingRecyclerView);
+        OutfitRecViewAdapter adapter = new OutfitRecViewAdapter(this);
+
+        mClothingViewModel = new ViewModelProvider(this).get(ClothingViewModel.class);
+
+        mClothingViewModel.getAllOutfits().observe(this, outfits -> {
+            this.outfits = new ArrayList<>();
+            this.outfits.add(outfits.get(0));
+            adapter.setOutfit(this.outfits);
+        });
+        clothingRecyclerView.setAdapter(adapter);
+        clothingRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+    }
+
+    @Override
+    public void onOutfitClick(int position) {
+
     }
 
     //TODO Display last created Outfit somehow (Make button to display last Outfit etc.)..
