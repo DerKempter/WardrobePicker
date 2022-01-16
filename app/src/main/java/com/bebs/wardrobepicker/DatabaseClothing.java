@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Clothing.class, Outfit.class, Season.class}, version = 5, exportSchema = true)
+@Database(entities = {Clothing.class, Outfit.class, Season.class}, version = 6, exportSchema = true)
 public abstract class DatabaseClothing extends RoomDatabase {
 
     public abstract ClothDao clothDao();
@@ -38,7 +38,7 @@ public abstract class DatabaseClothing extends RoomDatabase {
             synchronized (DatabaseClothing.class){
                 if (INSTANCE == null){
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            DatabaseClothing.class, "clothing_Database").addCallback(sRoomDatabaseCallback).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build();
+                            DatabaseClothing.class, "clothing_Database").addCallback(sRoomDatabaseCallback).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6).build();
                 }
             }
         }
@@ -157,12 +157,6 @@ public abstract class DatabaseClothing extends RoomDatabase {
                 cv.put("'spook'", season.getSpook());
                 database.insert("Season", OnConflictStrategy.ABORT, cv);
             }
-            Cursor otherCursor = database.query("SELECT * FROM season");
-            ArrayList<Integer> springgValues= new ArrayList<>();
-            while (otherCursor.moveToNext()) {
-                springgValues.add(otherCursor.getInt(1));
-            }
-            int a = 0;
         }
     };
 
@@ -183,6 +177,29 @@ public abstract class DatabaseClothing extends RoomDatabase {
 
             database.execSQL("DROP TABLE season");
             database.execSQL("ALTER TABLE SeasonNew RENAME TO Season");
+        }
+    };
+
+    static final Migration MIGRATION_5_6 = new Migration(5,6) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("DROP TABLE ClothesNew");
+            database.execSQL("CREATE TABLE IF NOT EXISTS 'ClothesNew' (" +
+                    "uid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "type_of_clothing INTEGER NOT NULL, " +
+                    "clothing_name TEXT, " +
+                    "description TEXT,  " +
+                    "seasonId INTEGER NOT NULL, " +
+                    "in_laundry INTEGER, " +
+                    "imagePath TEXT, " +
+                    "TypeList TEXT, " +
+                    "FOREIGN KEY('seasonId') REFERENCES 'Season'('id') ON UPDATE NO ACTION ON DELETE CASCADE )");
+
+            database.execSQL("INSERT INTO 'ClothesNew'(type_of_clothing,clothing_name,description,seasonId,in_laundry,TypeList) " +
+                    "SELECT type_of_clothing,clothing_name,description,seasonId,in_laundry,TypeList " +
+                    "FROM Clothes");
+            database.execSQL("DROP TABLE Clothes");
+            database.execSQL("ALTER TABLE ClothesNew RENAME TO Clothes");
         }
     };
 }

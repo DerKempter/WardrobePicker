@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements OutfitRecViewAdap
 
         mClothingViewModel.getAllOutfits().observe(this, outfits -> {
             this.outfits = new ArrayList<>();
-            this.outfits.add(outfits.get(0));
+            //this.outfits.add(outfits.get(0));
             adapter.setOutfit(this.outfits);
         });
         clothingRecyclerView.setAdapter(adapter);

@@ -40,7 +40,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.3'
     implementation 'androidx.navigation:navigation-ui:2.3.3'
     implementation 'com.google.guava:guava:30.1-android'
-    implementation 'net.alhazmy13.MediaPicker:library:2.4.4'
+    //implementation 'net.alhazmy13.MediaPicker:library:2.4.4'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

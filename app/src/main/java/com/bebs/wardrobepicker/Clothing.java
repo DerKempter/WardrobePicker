@@ -11,6 +11,7 @@ import androidx.room.Delete;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.PrimaryKey;
 import androidx.room.Query;
 import androidx.room.TypeConverter;
@@ -22,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Entity(tableName = "Clothes")
+@Entity(tableName = "Clothes", foreignKeys = {@ForeignKey(entity = Season.class, parentColumns = "id", childColumns = "seasonId", onDelete = OnConflictStrategy.IGNORE)})
 public class Clothing implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
@@ -44,6 +45,9 @@ public class Clothing implements Parcelable {
     @ColumnInfo(name = "in_laundry")
     private Boolean dirty = false;
 
+    @ColumnInfo(name = "imagePath")
+    private String imagePath;
+
     @TypeConverters(Converters.class)
     private ArrayList<String> TypeList;
 
@@ -54,13 +58,14 @@ public class Clothing implements Parcelable {
         this.populateTypeList();
     }
 
-    public Clothing(int uid, int Type, String Name, String Description, int Season, Boolean dirty, ArrayList<String> TypeList){
+    public Clothing(int uid, int Type, String Name, String Description, int Season, Boolean dirty, String imagePath, ArrayList<String> TypeList){
         this.uid = uid;
         this.Type = Type;
         this.Name = Name;
         this.Description = Description;
         this.Season = Season;
         this.dirty = dirty;
+        this.imagePath = imagePath;
         this.TypeList = TypeList;
         populateTypeList();
     }
@@ -80,6 +85,7 @@ public class Clothing implements Parcelable {
         Season = in.readInt();
         byte tmpDirty = in.readByte();
         dirty = tmpDirty == 0 ? null : tmpDirty == 1;
+        imagePath = in.readString();
         TypeList = in.createStringArrayList();
     }
 
@@ -91,6 +97,7 @@ public class Clothing implements Parcelable {
         dest.writeString(Description);
         dest.writeInt(Season);
         dest.writeByte((byte) (dirty == null ? 0 : dirty ? 1 : 2));
+        dest.writeString(imagePath);
         dest.writeStringList(TypeList);
     }
 
@@ -137,6 +144,14 @@ public class Clothing implements Parcelable {
 
     public Boolean getDirty() {
         return dirty;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public void setSeason(ArrayList<Integer> Season) {
